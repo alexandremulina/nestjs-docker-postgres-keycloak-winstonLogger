@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  db:
+    image: 'postgres'
+    container_name: nest_db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=nest_db
+    ports:
+      - '5432:5432'
+    networks:
+      - nest_app
+    volumes:
+      - postgresql-volume:/var/lib/postgresql/data
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:12.0.4
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_SCHEMA: public
+      DB_PASSWORD: password
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: password
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+
+volumes:
+  postgresql-volume:
+
+networks:
+  nest_app:
+    driver: bridge
