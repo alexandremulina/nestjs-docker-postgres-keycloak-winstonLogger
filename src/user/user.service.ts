@@ -1,4 +1,9 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -10,9 +15,11 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @Inject('NOTIFICATION_SERVICE') private readonly client: ClientProxy,
   ) {}
   async createUser(createUserDto: CreateUserDto) {
     try {
+      this.client.emit('hello', createUserDto);
       await this.userRepository.save(createUserDto);
       return createUserDto;
     } catch (error) {
