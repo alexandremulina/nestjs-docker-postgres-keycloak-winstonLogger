@@ -45,7 +45,7 @@ export class UserService {
               children: [
                 new TextRun('Valorant Player:'),
                 new TextRun({
-                  text: '\n BlackNarak ',
+                  text: '\n NickName ',
                   bold: true,
                 }),
                 new TextRun({
